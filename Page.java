@@ -14,45 +14,45 @@ public class Page{
 	public static int pageSize = 512;
 	public static final String datePattern = "yyyy-MM-dd_HH:mm:ss";
 
-public static short calPayloadSize(String[] values, String[] dataType){
-		int val = dataType.length; 
-		for(int i = 1; i < dataType.length; i++){
-			String dt = dataType[i];
-			switch(dt){
+public static short calPayloadSize(String[] vals, String[] dtaTyp){
+		int vlu = dtaTyp.length; 
+		for(int k = 1; k < dtaTyp.length; k++){
+			String daTy = dtaTyp[k];
+			switch(daTy){
 				case "TINYINT":
-					val = val + 1;
+					vlu = vlu + 1;
 					break;
 				case "SMALLINT":
-					val = val + 2;
+					vlu = vlu + 2;
 					break;
 				case "INT":
-					val = val + 4;
+					vlu = vlu + 4;
 					break;
 				case "BIGINT":
-					val = val + 8;
+					vlu = vlu + 8;
 					break;
 				case "REAL":
-					val = val + 4;
+					vlu = vlu + 4;
 					break;		
 				case "DOUBLE":
-					val = val + 8;
+					vlu = vlu + 8;
 					break;
 				case "DATETIME":
-					val = val + 8;
+					vlu = vlu + 8;
 					break;
 				case "DATE":
-					val = val + 8;
+					vlu = vlu + 8;
 					break;
 				case "TEXT":
-					String text = values[i];
+					String text = vals[k];
 					int len = text.length();
-					val = val + len;
+					vlu = vlu + len;
 					break;
 				default:
 					break;
 			}
 		}
-		return (short)val;
+		return (short)vlu;
 	}
 
 	public static int makeInteriorPage(RandomAccessFile file){
@@ -63,8 +63,8 @@ public static short calPayloadSize(String[] values, String[] dataType){
 			file.setLength(pageSize * num_pages);
 			file.seek((num_pages-1)*pageSize);
 			file.writeByte(0x05); 
-		}catch(Exception e){
-			System.out.println(e);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 
 		return num_pages;
@@ -78,40 +78,40 @@ public static short calPayloadSize(String[] values, String[] dataType){
 			file.setLength(pageSize * num_pages);
 			file.seek((num_pages-1)*pageSize);
 			file.writeByte(0x0D); 
-		}catch(Exception e){
-			System.out.println(e);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 
 		return num_pages;
 
 	}
 
-	public static int findMidKey(RandomAccessFile file, int page){
-		int val = 0;
+	public static int findMidKey(RandomAccessFile file, int datPge){
+		int vlu = 0;
 		try{
-			file.seek((page-1)*pageSize);
+			file.seek((datPge-1)*pageSize);
 			byte pageType = file.readByte();
-			int numCells = getCellNumber(file, page);
+			int numCells = getCellNumber(file, datPge);
 			int mid = (int) Math.ceil((double) numCells / 2);
-			long loc = getCellLoc(file, page, mid-1);
+			long loc = getCellLoc(file, datPge, mid-1);
 			file.seek(loc);
 
 			switch(pageType){
 				case 0x05:
 					file.readInt(); 
-					val = file.readInt();
+					vlu = file.readInt();
 					break;
 				case 0x0D:
 					file.readShort();
-					val = file.readInt();
+					vlu = file.readInt();
 					break;
 			}
 
-		}catch(Exception e){
-			System.out.println(e);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 
-		return val;
+		return vlu;
 	}
 
 	
@@ -126,8 +126,8 @@ public static short calPayloadSize(String[] values, String[] dataType){
 			int numCellB = numCells - numCellA;
 			int content = 512;
 
-			for(int i = numCellA; i < numCells; i++){
-				long loc = getCellLoc(file, curPage, i);
+			for(int k = numCellA; k < numCells; k++){
+				long loc = getCellLoc(file, curPage, k);
 				file.seek(loc);
 				int cellSize = file.readShort()+6;
 				content = content - cellSize;
@@ -136,7 +136,7 @@ public static short calPayloadSize(String[] values, String[] dataType){
 				file.read(cell);
 				file.seek((newPage-1)*pageSize+content);
 				file.write(cell);
-				setCellOffset(file, newPage, i - numCellA, content);
+				setCellOffset(file, newPage, k - numCellA, content);
 			}
 
 			
@@ -144,9 +144,9 @@ public static short calPayloadSize(String[] values, String[] dataType){
 			file.writeShort(content);
 
 			
-			short offset = getCellOffset(file, curPage, numCellA-1);
+			short enumOfSet = getCellOffset(file, curPage, numCellA-1);
 			file.seek((curPage-1)*pageSize+2);
-			file.writeShort(offset);
+			file.writeShort(enumOfSet);
 
 			
 			int rightMost = getRightMost(file, curPage);
@@ -158,13 +158,13 @@ public static short calPayloadSize(String[] values, String[] dataType){
 			setParent(file, newPage, parent);
 
 			
-			byte num = (byte) numCellA;
-			setCellNumber(file, curPage, num);
-			num = (byte) numCellB;
-			setCellNumber(file, newPage, num);
+			byte varNum = (byte) numCellA;
+			setCellNumber(file, curPage, varNum);
+			varNum = (byte) numCellB;
+			setCellNumber(file, newPage, varNum);
 			
-		}catch(Exception e){
-			System.out.println(e);
+		}catch(Exception ex){
+			System.out.println(ex);
 			
 		}
 	}
@@ -180,8 +180,8 @@ public static short calPayloadSize(String[] values, String[] dataType){
 			int numCellB = numCells - numCellA - 1;
 			short content = 512;
 
-			for(int i = numCellA+1; i < numCells; i++){
-				long loc = getCellLoc(file, curPage, i);
+			for(int k = numCellA+1; k < numCells; k++){
+				long loc = getCellLoc(file, curPage, k);
 				short cellSize = 8;
 				content = (short)(content - cellSize);
 				file.seek(loc);
@@ -190,9 +190,9 @@ public static short calPayloadSize(String[] values, String[] dataType){
 				file.seek((newPage-1)*pageSize+content);
 				file.write(cell);
 				file.seek(loc);
-				int page = file.readInt();
-				setParent(file, page, newPage);
-				setCellOffset(file, newPage, i - (numCellA + 1), content);
+				int datPge = file.readInt();
+				setParent(file, datPge, newPage);
+				setCellOffset(file, newPage, k - (numCellA + 1), content);
 			}
 			
 			int tmp = getRightMost(file, curPage);
@@ -206,40 +206,40 @@ public static short calPayloadSize(String[] values, String[] dataType){
 			file.seek((newPage-1)*pageSize+2);
 			file.writeShort(content);
 			
-			short offset = getCellOffset(file, curPage, numCellA-1);
+			short enumOfSet = getCellOffset(file, curPage, numCellA-1);
 			file.seek((curPage-1)*pageSize+2);
-			file.writeShort(offset);
+			file.writeShort(enumOfSet);
 
 			
 			int parent = getParent(file, curPage);
 			setParent(file, newPage, parent);
 			
-			byte num = (byte) numCellA;
-			setCellNumber(file, curPage, num);
-			num = (byte) numCellB;
-			setCellNumber(file, newPage, num);
+			byte varNum = (byte) numCellA;
+			setCellNumber(file, curPage, varNum);
+			varNum = (byte) numCellB;
+			setCellNumber(file, newPage, varNum);
 			
-		}catch(Exception e){
-			System.out.println(e);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 	}
 
 	
-	public static void splitLeaf(RandomAccessFile file, int page){
+	public static void splitLeaf(RandomAccessFile file, int datPge){
 		int newPage = makeLeafPage(file);
-		int midKey = findMidKey(file, page);
-		splitLeafPage(file, page, newPage);
-		int parent = getParent(file, page);
+		int midKey = findMidKey(file, datPge);
+		splitLeafPage(file, datPge, newPage);
+		int parent = getParent(file, datPge);
 		if(parent == 0){
 			int rootPage = makeInteriorPage(file);
-			setParent(file, page, rootPage);
+			setParent(file, datPge, rootPage);
 			setParent(file, newPage, rootPage);
 			setRightMost(file, rootPage, newPage);
-			insertInteriorCell(file, rootPage, page, midKey);
+			insertInteriorCell(file, rootPage, datPge, midKey);
 		}else{
-			long ploc = getPointerLoc(file, page, parent);
+			long ploc = getPointerLoc(file, datPge, parent);
 			setPointerLoc(file, ploc, parent, newPage);
-			insertInteriorCell(file, parent, page, midKey);
+			insertInteriorCell(file, parent, datPge, midKey);
 			sortCellArray(file, parent);
 			while(checkInteriorSpace(file, parent)){
 				parent = splitInterior(file, parent);
@@ -247,147 +247,147 @@ public static short calPayloadSize(String[] values, String[] dataType){
 		}
 	}
 
-	public static int splitInterior(RandomAccessFile file, int page){
+	public static int splitInterior(RandomAccessFile file, int datPge){
 		int newPage = makeInteriorPage(file);
-		int midKey = findMidKey(file, page);
-		splitInteriorPage(file, page, newPage);
-		int parent = getParent(file, page);
+		int midKey = findMidKey(file, datPge);
+		splitInteriorPage(file, datPge, newPage);
+		int parent = getParent(file, datPge);
 		if(parent == 0){
 			int rootPage = makeInteriorPage(file);
-			setParent(file, page, rootPage);
+			setParent(file, datPge, rootPage);
 			setParent(file, newPage, rootPage);
 			setRightMost(file, rootPage, newPage);
-			insertInteriorCell(file, rootPage, page, midKey);
+			insertInteriorCell(file, rootPage, datPge, midKey);
 			return rootPage;
 		}else{
-			long ploc = getPointerLoc(file, page, parent);
+			long ploc = getPointerLoc(file, datPge, parent);
 			setPointerLoc(file, ploc, parent, newPage);
-			insertInteriorCell(file, parent, page, midKey);
+			insertInteriorCell(file, parent, datPge, midKey);
 			sortCellArray(file, parent);
 			return parent;
 		}
 	}
 
 	
-	public static void sortCellArray(RandomAccessFile file, int page){
-		 byte num = getCellNumber(file, page);
-		 int[] keyArray = getKeyArray(file, page);
-		 short[] cellArray = getCellArray(file, page);
-		 int ltmp;
-		 short rtmp;
+	public static void sortCellArray(RandomAccessFile file, int datPge){
+		 byte varNum = getCellNumber(file, datPge);
+		 int[] arrOfKey = getKeyArray(file, datPge);
+		 short[] arrayOfCell = getCellArray(file, datPge);
+		 int tmpLef;
+		 short rmpRt;
 
-		 for (int i = 1; i < num; i++) {
-            for(int j = i ; j > 0 ; j--){
-                if(keyArray[j] < keyArray[j-1]){
+		 for (int k = 1; k < varNum; k++) {
+            for(int l = k ; l > 0 ; l--){
+                if(arrOfKey[l] < arrOfKey[l-1]){
 
-                    ltmp = keyArray[j];
-                    keyArray[j] = keyArray[j-1];
-                    keyArray[j-1] = ltmp;
+                    tmpLef = arrOfKey[l];
+                    arrOfKey[l] = arrOfKey[l-1];
+                    arrOfKey[l-1] = tmpLef;
 
-                    rtmp = cellArray[j];
-                    cellArray[j] = cellArray[j-1];
-                    cellArray[j-1] = rtmp;
+                    rmpRt = arrayOfCell[l];
+                    arrayOfCell[l] = arrayOfCell[l-1];
+                    arrayOfCell[l-1] = rmpRt;
                 }
             }
          }
 
          try{
-         	file.seek((page-1)*pageSize+12);
-         	for(int i = 0; i < num; i++){
-				file.writeShort(cellArray[i]);
+         	file.seek((datPge-1)*pageSize+12);
+         	for(int k = 0; k < varNum; k++){
+				file.writeShort(arrayOfCell[k]);
 			}
-         }catch(Exception e){
+         }catch(Exception ex){
          	System.out.println("Error at sortCellArray");
          }
 	}
 
-	public static int[] getKeyArray(RandomAccessFile file, int page){
-		int num = new Integer(getCellNumber(file, page));
-		int[] array = new int[num];
+	public static int[] getKeyArray(RandomAccessFile file, int datPge){
+		int varNum = new Integer(getCellNumber(file, datPge));
+		int[] lstArr = new int[varNum];
 
 		try{
-			file.seek((page-1)*pageSize);
+			file.seek((datPge-1)*pageSize);
 			byte pageType = file.readByte();
-			byte offset = 0;
+			byte enumOfSet = 0;
 			switch(pageType){
 			    case 0x0d:
-				    offset = 2;
+				    enumOfSet = 2;
 				    break;
 				case 0x05:
-					offset = 4;
+					enumOfSet = 4;
 					break;
 				default:
-					offset = 2;
+					enumOfSet = 2;
 					break;
 			}
 
-			for(int i = 0; i < num; i++){
-				long loc = getCellLoc(file, page, i);
-				file.seek(loc+offset);
-				array[i] = file.readInt();
+			for(int k = 0; k < varNum; k++){
+				long loc = getCellLoc(file, datPge, k);
+				file.seek(loc+enumOfSet);
+				lstArr[k] = file.readInt();
 			}
 
-		}catch(Exception e){
-			System.out.println(e);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 
-		return array;
+		return lstArr;
 	}
 	
-	public static short[] getCellArray(RandomAccessFile file, int page){
-		int num = new Integer(getCellNumber(file, page));
-		short[] array = new short[num];
+	public static short[] getCellArray(RandomAccessFile file, int datPge){
+		int varNum = new Integer(getCellNumber(file, datPge));
+		short[] lstArr = new short[varNum];
 
 		try{
-			file.seek((page-1)*pageSize+12);
-			for(int i = 0; i < num; i++){
-				array[i] = file.readShort();
+			file.seek((datPge-1)*pageSize+12);
+			for(int k = 0; k < varNum; k++){
+				lstArr[k] = file.readShort();
 			}
-		}catch(Exception e){
-			System.out.println(e);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 
-		return array;
+		return lstArr;
 	}
 
 	
-	public static long getPointerLoc(RandomAccessFile file, int page, int parent){
-		long val = 0;
+	public static long getPointerLoc(RandomAccessFile file, int datPge, int parent){
+		long vlu = 0;
 		try{
 			int numCells = new Integer(getCellNumber(file, parent));
-			for(int i=0; i < numCells; i++){
-				long loc = getCellLoc(file, parent, i);
+			for(int k=0; k < numCells; k++){
+				long loc = getCellLoc(file, parent, k);
 				file.seek(loc);
 				int childPage = file.readInt();
-				if(childPage == page){
-					val = loc;
+				if(childPage == datPge){
+					vlu = loc;
 				}
 			}
-		}catch(Exception e){
-			System.out.println(e);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 
-		return val;
+		return vlu;
 	}
 
-	public static void setPointerLoc(RandomAccessFile file, long loc, int parent, int page){
+	public static void setPointerLoc(RandomAccessFile file, long loc, int parent, int datPge){
 		try{
 			if(loc == 0){
 				file.seek((parent-1)*pageSize+4);
 			}else{
 				file.seek(loc);
 			}
-			file.writeInt(page);
-		}catch(Exception e){
-			System.out.println(e);
+			file.writeInt(datPge);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 	} 
 
 	
-	public static void insertInteriorCell(RandomAccessFile file, int page, int child, int key){
+	public static void insertInteriorCell(RandomAccessFile file, int datPge, int child, int key){
 		try{
 			
-			file.seek((page-1)*pageSize+2);
+			file.seek((datPge-1)*pageSize+2);
 			short content = file.readShort();
 			
 			if(content == 0)
@@ -395,313 +395,313 @@ public static short calPayloadSize(String[] values, String[] dataType){
 			
 			content = (short)(content - 8);
 			
-			file.seek((page-1)*pageSize+content);
+			file.seek((datPge-1)*pageSize+content);
 			file.writeInt(child);
 			file.writeInt(key);
 			
-			file.seek((page-1)*pageSize+2);
+			file.seek((datPge-1)*pageSize+2);
 			file.writeShort(content);
 			
-			byte num = getCellNumber(file, page);
-			setCellOffset(file, page ,num, content);
+			byte varNum = getCellNumber(file, datPge);
+			setCellOffset(file, datPge ,varNum, content);
 			
-			num = (byte) (num + 1);
-			setCellNumber(file, page, num);
+			varNum = (byte) (varNum + 1);
+			setCellNumber(file, datPge, varNum);
 
-		}catch(Exception e){
-			System.out.println(e);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 	}
 
-	public static void insertLeafCell(RandomAccessFile file, int page, int offset, short plsize, int key, byte[] stc, String[] vals){
+	public static void insertLeafCell(RandomAccessFile dataFl, int datPge, int enumOfSet, short plsize, int key, byte[] stc, String[] vals){
 		try{
-			String s;
-			file.seek((page-1)*pageSize+offset);
-			file.writeShort(plsize);
-			file.writeInt(key);
+			String d_sub;
+			dataFl.seek((datPge-1)*pageSize+enumOfSet);
+			dataFl.writeShort(plsize);
+			dataFl.writeInt(key);
 			int col = vals.length - 1;
-			file.writeByte(col);
-			file.write(stc);
-			for(int i = 1; i < vals.length; i++){
-				switch(stc[i-1]){
+			dataFl.writeByte(col);
+			dataFl.write(stc);
+			for(int k = 1; k < vals.length; k++){
+				switch(stc[k-1]){
 					case 0x00:
-						file.writeByte(0);
+						dataFl.writeByte(0);
 						break;
 					case 0x01:
-						file.writeShort(0);
+						dataFl.writeShort(0);
 						break;
 					case 0x02:
-						file.writeInt(0);
+						dataFl.writeInt(0);
 						break;
 					case 0x03:
-						file.writeLong(0);
+						dataFl.writeLong(0);
 						break;
 					case 0x04:
-						file.writeByte(new Byte(vals[i]));
+						dataFl.writeByte(new Byte(vals[k]));
 						break;
 					case 0x05:
-						file.writeShort(new Short(vals[i]));
+						dataFl.writeShort(new Short(vals[k]));
 						break;
 					case 0x06:
-						file.writeInt(new Integer(vals[i]));
+						dataFl.writeInt(new Integer(vals[k]));
 						break;
 					case 0x07:
-						file.writeLong(new Long(vals[i]));
+						dataFl.writeLong(new Long(vals[k]));
 						break;
 					case 0x08:
-						file.writeFloat(new Float(vals[i]));
+						dataFl.writeFloat(new Float(vals[k]));
 						break;
 					case 0x09:
-						file.writeDouble(new Double(vals[i]));
+						dataFl.writeDouble(new Double(vals[k]));
 						break;
 					case 0x0A:
-						s = vals[i];
-						Date temp = new SimpleDateFormat(datePattern).parse(s.substring(1, s.length()-1));
+						d_sub = vals[k];
+						Date temp = new SimpleDateFormat(datePattern).parse(d_sub.substring(1, d_sub.length()-1));
 						long time = temp.getTime();
-						file.writeLong(time);
+						dataFl.writeLong(time);
 						break;
 					case 0x0B:
-						s = vals[i];
-						s = s.substring(1, s.length()-1);
-						s = s+"_00:00:00";
-						Date temp2 = new SimpleDateFormat(datePattern).parse(s);
+						d_sub = vals[k];
+						d_sub = d_sub.substring(1, d_sub.length()-1);
+						d_sub = d_sub+"_00:00:00";
+						Date temp2 = new SimpleDateFormat(datePattern).parse(d_sub);
 						long time2 = temp2.getTime();
-						file.writeLong(time2);
+						dataFl.writeLong(time2);
 						break;
 					default:
-						file.writeBytes(vals[i]);
+						dataFl.writeBytes(vals[k]);
 						break;
 				}
 			}
-			int n = getCellNumber(file, page);
+			int n = getCellNumber(dataFl, datPge);
 			byte tmp = (byte) (n+1);
-			setCellNumber(file, page, tmp);
-			file.seek((page-1)*pageSize+12+n*2);
-			file.writeShort(offset);
-			file.seek((page-1)*pageSize+2);
-			int content = file.readShort();
-			if(content >= offset || content == 0){
-				file.seek((page-1)*pageSize+2);
-				file.writeShort(offset);
+			setCellNumber(dataFl, datPge, tmp);
+			dataFl.seek((datPge-1)*pageSize+12+n*2);
+			dataFl.writeShort(enumOfSet);
+			dataFl.seek((datPge-1)*pageSize+2);
+			int content = dataFl.readShort();
+			if(content >= enumOfSet || content == 0){
+				dataFl.seek((datPge-1)*pageSize+2);
+				dataFl.writeShort(enumOfSet);
 			}
-		}catch(Exception e){
-			System.out.println(e);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 	}
 
-	public static void updateLeafCell(RandomAccessFile file, int page, int offset, int plsize, int key, byte[] stc, String[] vals){
+	public static void updateLeafCell(RandomAccessFile dataFl, int datPge, int enumOfSet, int plsize, int key, byte[] stc, String[] vals){
 		try{
-			String s;
-			file.seek((page-1)*pageSize+offset);
-			file.writeShort(plsize);
-			file.writeInt(key);
+			String d_sub;
+			dataFl.seek((datPge-1)*pageSize+enumOfSet);
+			dataFl.writeShort(plsize);
+			dataFl.writeInt(key);
 			int col = vals.length - 1;
-			file.writeByte(col);
-			file.write(stc);
-			for(int i = 1; i < vals.length; i++){
-				switch(stc[i-1]){
+			dataFl.writeByte(col);
+			dataFl.write(stc);
+			for(int k = 1; k < vals.length; k++){
+				switch(stc[k-1]){
 					case 0x00:
-						file.writeByte(0);
+						dataFl.writeByte(0);
 						break;
 					case 0x01:
-						file.writeShort(0);
+						dataFl.writeShort(0);
 						break;
 					case 0x02:
-						file.writeInt(0);
+						dataFl.writeInt(0);
 						break;
 					case 0x03:
-						file.writeLong(0);
+						dataFl.writeLong(0);
 						break;
 					case 0x04:
-						file.writeByte(new Byte(vals[i]));
+						dataFl.writeByte(new Byte(vals[k]));
 						break;
 					case 0x05:
-						file.writeShort(new Short(vals[i]));
+						dataFl.writeShort(new Short(vals[k]));
 						break;
 					case 0x06:
-						file.writeInt(new Integer(vals[i]));
+						dataFl.writeInt(new Integer(vals[k]));
 						break;
 					case 0x07:
-						file.writeLong(new Long(vals[i]));
+						dataFl.writeLong(new Long(vals[k]));
 						break;
 					case 0x08:
-						file.writeFloat(new Float(vals[i]));
+						dataFl.writeFloat(new Float(vals[k]));
 						break;
 					case 0x09:
-						file.writeDouble(new Double(vals[i]));
+						dataFl.writeDouble(new Double(vals[k]));
 						break;
 					case 0x0A:
-						s = vals[i];
-						Date temp = new SimpleDateFormat(datePattern).parse(s.substring(1, s.length()-1));
+						d_sub = vals[k];
+						Date temp = new SimpleDateFormat(datePattern).parse(d_sub.substring(1, d_sub.length()-1));
 						long time = temp.getTime();
-						file.writeLong(time);
+						dataFl.writeLong(time);
 						break;
 					case 0x0B:
-						s = vals[i];
-						s = s.substring(1, s.length()-1);
-						s = s+"_00:00:00";
-						Date temp2 = new SimpleDateFormat(datePattern).parse(s);
+						d_sub = vals[k];
+						d_sub = d_sub.substring(1, d_sub.length()-1);
+						d_sub = d_sub+"_00:00:00";
+						Date temp2 = new SimpleDateFormat(datePattern).parse(d_sub);
 						long time2 = temp2.getTime();
-						file.writeLong(time2);
+						dataFl.writeLong(time2);
 						break;
 					default:
-						file.writeBytes(vals[i]);
+						dataFl.writeBytes(vals[k]);
 						break;
 				}
 			}
-		}catch(Exception e){
-			System.out.println(e);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 	}
 
 	
-	public static boolean checkInteriorSpace(RandomAccessFile file, int page){
-		byte numCells = getCellNumber(file, page);
+	public static boolean checkInteriorSpace(RandomAccessFile dataFl, int datPge){
+		byte numCells = getCellNumber(dataFl, datPge);
 		if(numCells > 30)
 			return true;
 		else
 			return false;
 	}
 
-	public static int checkLeafSpace(RandomAccessFile file, int page, int size){
-		int val = -1;
+	public static int checkLeafSpace(RandomAccessFile dataFl, int datPge, int size){
+		int vlu = -1;
 
 		try{
-			file.seek((page-1)*pageSize+2);
-			int content = file.readShort();
+			dataFl.seek((datPge-1)*pageSize+2);
+			int content = dataFl.readShort();
 			if(content == 0)
 				return pageSize - size;
-			int numCells = getCellNumber(file, page);
+			int numCells = getCellNumber(dataFl, datPge);
 			int space = content - 20 - 2*numCells;
 			if(size < space)
 				return content - size;
 			
-		}catch(Exception e){
-			System.out.println(e);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 
-		return val;
+		return vlu;
 	}
 
 	
-	public static int getParent(RandomAccessFile file, int page){
-		int val = 0;
+	public static int getParent(RandomAccessFile dataFl, int datPge){
+		int vlu = 0;
 
 		try{
-			file.seek((page-1)*pageSize+8);
-			val = file.readInt();
-		}catch(Exception e){
-			System.out.println(e);
+			dataFl.seek((datPge-1)*pageSize+8);
+			vlu = dataFl.readInt();
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 
-		return val;
+		return vlu;
 	}
 
-	public static void setParent(RandomAccessFile file, int page, int parent){
+	public static void setParent(RandomAccessFile dataFl, int datPge, int parent){
 		try{
-			file.seek((page-1)*pageSize+8);
-			file.writeInt(parent);
-		}catch(Exception e){
-			System.out.println(e);
+			dataFl.seek((datPge-1)*pageSize+8);
+			dataFl.writeInt(parent);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 	}
 	
-	public static int getRightMost(RandomAccessFile file, int page){
+	public static int getRightMost(RandomAccessFile dataFl, int datPge){
 		int rl = 0;
 
 		try{
-			file.seek((page-1)*pageSize+4);
-			rl = file.readInt();
-		}catch(Exception e){
+			dataFl.seek((datPge-1)*pageSize+4);
+			rl = dataFl.readInt();
+		}catch(Exception ex){
 			System.out.println("Error at getRightMost");
 		}
 
 		return rl;
 	}
 
-	public static void setRightMost(RandomAccessFile file, int page, int rightLeaf){
+	public static void setRightMost(RandomAccessFile dataFl, int datPge, int rightLeaf){
 
 		try{
-			file.seek((page-1)*pageSize+4);
-			file.writeInt(rightLeaf);
-		}catch(Exception e){
+			dataFl.seek((datPge-1)*pageSize+4);
+			dataFl.writeInt(rightLeaf);
+		}catch(Exception ex){
 			System.out.println("Error at setRightMost");
 		}
 
 	}
 
-	public static boolean hasKey(RandomAccessFile file, int page, int key){
-		int[] keys = getKeyArray(file, page);
-		for(int i : keys)
-			if(key == i)
+	public static boolean hasKey(RandomAccessFile dataFl, int datPge, int key){
+		int[] lstOfKys = getKeyArray(dataFl, datPge);
+		for(int k : lstOfKys)
+			if(key == k)
 				return true;
 		return false;
 	}
 	
-	public static long getCellLoc(RandomAccessFile file, int page, int id){
+	public static long getCellLoc(RandomAccessFile dataFl, int datPge, int id){
 		long loc = 0;
 		try{
-			file.seek((page-1)*pageSize+12+id*2);
-			short offset = file.readShort();
-			long orig = (page-1)*pageSize;
-			loc = orig + offset;
-		}catch(Exception e){
-			System.out.println(e);
+			dataFl.seek((datPge-1)*pageSize+12+id*2);
+			short enumOfSet = dataFl.readShort();
+			long d_orig = (datPge-1)*pageSize;
+			loc = d_orig + enumOfSet;
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 		return loc;
 	}
 
-	public static byte getCellNumber(RandomAccessFile file, int page){
-		byte val = 0;
+	public static byte getCellNumber(RandomAccessFile dataFl, int datPge){
+		byte vlu = 0;
 
 		try{
-			file.seek((page-1)*pageSize+1);
-			val = file.readByte();
-		}catch(Exception e){
-			System.out.println(e);
+			dataFl.seek((datPge-1)*pageSize+1);
+			vlu = dataFl.readByte();
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 
-		return val;
+		return vlu;
 	}
 
-	public static void setCellNumber(RandomAccessFile file, int page, byte num){
+	public static void setCellNumber(RandomAccessFile dataFl, int datPge, byte varNum){
 		try{
-			file.seek((page-1)*pageSize+1);
-			file.writeByte(num);
-		}catch(Exception e){
-			System.out.println(e);
+			dataFl.seek((datPge-1)*pageSize+1);
+			dataFl.writeByte(varNum);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 	}
 	
-	public static short getCellOffset(RandomAccessFile file, int page, int id){
-		short offset = 0;
+	public static short getCellOffset(RandomAccessFile dataFl, int datPge, int id){
+		short enumOfSet = 0;
 		try{
-			file.seek((page-1)*pageSize+12+id*2);
-			offset = file.readShort();
-		}catch(Exception e){
-			System.out.println(e);
+			dataFl.seek((datPge-1)*pageSize+12+id*2);
+			enumOfSet = dataFl.readShort();
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
-		return offset;
+		return enumOfSet;
 	}
 
-	public static void setCellOffset(RandomAccessFile file, int page, int id, int offset){
+	public static void setCellOffset(RandomAccessFile dataFl, int datPge, int id, int enumOfSet){
 		try{
-			file.seek((page-1)*pageSize+12+id*2);
-			file.writeShort(offset);
-		}catch(Exception e){
-			System.out.println(e);
+			dataFl.seek((datPge-1)*pageSize+12+id*2);
+			dataFl.writeShort(enumOfSet);
+		}catch(Exception ex){
+			System.out.println(ex);
 		}
 	}
     
-	public static byte getPageType(RandomAccessFile file, int page){
-		byte type=0x05;
+	public static byte getPageType(RandomAccessFile dataFl, int datPge){
+		byte dTyp=0x05;
 		try {
-			file.seek((page-1)*pageSize);
-			type = file.readByte();
-		} catch (Exception e) {
-			System.out.println(e);
+			dataFl.seek((datPge-1)*pageSize);
+			dTyp = dataFl.readByte();
+		} catch (Exception ex) {
+			System.out.println(ex);
 		}
-		return type;
+		return dTyp;
 	}
 	//public static void main(String[] args){}
 }

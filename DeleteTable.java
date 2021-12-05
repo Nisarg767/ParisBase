@@ -7,56 +7,56 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.SortedMap;
 public class DeleteTable {
-	public static void parseDeleteString(String deleteString) {
-		System.out.println("DELETE METHOD");
-		System.out.println("Parsing the string:\"" + deleteString + "\"");
+	public static void parseDeleteString(String delStr) {
+		System.out.println("DELETE OPERATION");
+		System.out.println("Parsing the string:\"" + delStr + "\"");
 		
-		String[] tokens=deleteString.split(" ");
-		String table = tokens[3];
-		String[] temp = deleteString.split("where");
-		String cmpTemp = temp[1];
-		String[] cmp = DavisBase.parserEquation(cmpTemp);
-		if(!DavisBase.tableExists(table)){
-			System.out.println("Table "+table+" does not exist.");
+		String[] valTkn=delStr.split(" ");
+		String tbl = valTkn[3];
+		String[] dumy = delStr.split("where");
+		String cmpTemp = dumy[1];
+		String[] comp = DavisBase.parserEquation(cmpTemp);
+		if(!DavisBase.tableExists(tbl)){
+			System.out.println("Table "+tbl+" does not exist.");
 		}
 		else
 		{
-			delete(table, cmp);
+			delete(tbl, comp);
 		}
 	}
-	public static void delete(String table, String[] cmp){
+	public static void delete(String tbl, String[] comp){
 		try{
-		int key = new Integer(cmp[2]);
+		int key = new Integer(comp[2]);
 
-		RandomAccessFile file = new RandomAccessFile("data/"+table+".tbl", "rw");
-		int numPages = Table.pages(file);
-		int page = 0;
-		for(int p = 1; p <= numPages; p++)
-			if(Page.hasKey(file, p, key)&Page.getPageType(file, p)==0x0D){
-				page = p;
+		RandomAccessFile fle = new RandomAccessFile("data/"+tbl+".tbl", "rw");
+		int numPages = Table.pages(fle);
+		int eachPag = 0;
+		for(int pg = 1; pg <= numPages; pg++)
+			if(Page.hasKey(fle, pg, key)&Page.getPageType(fle, pg)==0x0D){
+				eachPag = pg;
 				break;
 			}
 		
-		if(page==0)
+		if(eachPag==0)
 		{
 			System.out.println("The given key value does not exist");
 			return;
 		}
 		
-		short[] cellsAddr = Page.getCellArray(file, page);
+		short[] addrOfCell = Page.getCellArray(fle, eachPag);
 		int k = 0;
-		for(int i = 0; i < cellsAddr.length; i++)
+		for(int l = 0; l < addrOfCell.length; l++)
 		{
-			long loc = Page.getCellLoc(file, page, i);
-			String[] vals = Table.retrieveValues(file, loc);
-			int x = new Integer(vals[0]);
-			if(x!=key)
+			long loc = Page.getCellLoc(fle, eachPag, l);
+			String[] vals = Table.retrieveValues(fle, loc);
+			int d = new Integer(vals[0]);
+			if(d!=key)
 			{
-				Page.setCellOffset(file, page, k, cellsAddr[i]);
+				Page.setCellOffset(fle, eachPag, k, addrOfCell[l]);
 				k++;
 			}
 		}
-		Page.setCellNumber(file, page, (byte)k);
+		Page.setCellNumber(fle, eachPag, (byte)k);
 		
 		}catch(Exception e)
 		{

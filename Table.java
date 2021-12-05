@@ -203,26 +203,26 @@ public class Table{
 		if(value.equals("null")){
 			switch(dataTyp){
 				case "TINYINT":     return 0x00;
-				case "SMALLINT":    return 0x01;
 				case "INT":			return 0x02;
-				case "BIGINT":      return 0x03;
+				case "SMALLINT":    return 0x01;
 				case "REAL":        return 0x02;
 				case "DOUBLE":      return 0x03;
+				case "BIGINT":      return 0x03;
 				case "DATETIME":    return 0x03;
-				case "DATE":        return 0x03;
 				case "TEXT":        return 0x03;
+				case "DATE":        return 0x03;
 				default:			return 0x00;
 			}							
 		}else{
 			switch(dataTyp){
 				case "TINYINT":     return 0x04;
-				case "SMALLINT":    return 0x05;
 				case "INT":			return 0x06;
-				case "BIGINT":      return 0x07;
 				case "REAL":        return 0x08;
+				case "BIGINT":      return 0x07;
 				case "DOUBLE":      return 0x09;
-				case "DATETIME":    return 0x0A;
+				case "SMALLINT":    return 0x05;
 				case "DATE":        return 0x0B;
+				case "DATETIME":    return 0x0A;
 				case "TEXT":        return (byte)(value.length()+0x0C);
 				default:			return 0x00;
 			}
