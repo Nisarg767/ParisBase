@@ -2,19 +2,19 @@ import java.util.HashMap;
 
 class Buffer{
 	
-	public int num_row; 
+	public int number_row; 
 	public HashMap<Integer, String[]> content;
 	public String[] columnName; 
 	public int[] format; 
 	
 	public Buffer(){
-		num_row = 0;
+		number_row = 0;
 		content = new HashMap<Integer, String[]>();
 	}
 
 	public void add_vals(int rowid, String[] val){
 		content.put(rowid, val);
-		num_row = num_row + 1;
+		number_row = number_row + 1;
 	}
 
 	public String fix(int len, String s) {
@@ -24,7 +24,7 @@ class Buffer{
 
 	public void display(String[] col){
 		
-		if(num_row == 0){
+		if(number_row == 0){
 			System.out.println("Empty set.");
 		}
 		else{

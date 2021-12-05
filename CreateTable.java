@@ -13,24 +13,24 @@ public static void parseCreateString(String createString) {
 		
 		System.out.println("CREATE METHOD");
 		System.out.println("Parsing the string:\"" + createString + "\"");
-		String[] tokens=createString.split(" ");
+		String[] token=createString.split(" ");
 		
-		if (tokens[1].compareTo("index")==0)
+		if (token[1].compareTo("index")==0)
 		{
-		String col = tokens[4];
+		String col = token[4];
 		String colName = col.substring(1,col.length()-1);
-		Index.createIndex(tokens[3],colName, "String");
+		Index.createIndex(token[3],colName, "String");
 		}
 		else
 		{
 		
-		if (tokens[1].compareTo("table")>0){
+		if (token[1].compareTo("table")>0){
 			System.out.println("Wrong syntax");
 			
 		}
 		else{
 				 
-		String tableName = tokens[2];
+		String tableName = token[2];
 		String[] temp = createString.split(tableName);
 		String cols = temp[1].trim();
 		String[] create_cols = cols.substring(1, cols.length()-1).split(",");
