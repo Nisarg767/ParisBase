@@ -1,4 +1,4 @@
-DavisBase supports only one database and one user which are used by default. User can create multiple tables in the database. Supported commands are as follows.
+ParisBase supports only one database and one user which are used by default. User can create multiple tables in the database. Supported commands are as follows.
 
 SHOW TABLES;                                               Display all the tables in the database.
 CREATE TABLE table_name (column_name datatype);            Create a new table in the database.
