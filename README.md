@@ -3,7 +3,7 @@ DavisBase supports only one database and one user which are used by default. Use
 SHOW TABLES;                                               Display all the tables in the database.
 CREATE TABLE table_name (column_name datatype);            Create a new table in the database.
 INSERT INTO table_name VALUES (value1,value2,..);          Insert a new record into the table.
-DELETE FROM TABLE table_name WHERE row_id = key_value;     Delete a record from the table whose rowid is <key_value>.
+DELETE FROM TABLE table_name WHERE row_id = value;         Delete a record from the table whose rowid is <value>.
 UPDATE table_name SET column_name = value WHERE condition; Modifies the records in the table.
 CREATE INDEX ON table_name (column_name);                  Create index for the specified column in the table.
 SELECT * FROM table_name;                                  Display all records in the table.
