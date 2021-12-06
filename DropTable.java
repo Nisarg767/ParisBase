@@ -11,8 +11,8 @@ public class DropTable {
 		System.out.println("DROP METHOD");
 		System.out.println("Parsing the string:\"" + dropTableString + "\"");
 		
-		String[] tokens=dropTableString.split(" ");
-		String tableName = tokens[2];
+		String[] token=dropTableString.split(" ");
+		String tableName = token[2];
 		if(!DavisBase.tableExists(tableName)){
 			System.out.println("Table "+tableName+" does not exist.");
 		}
@@ -26,8 +26,8 @@ public class DropTable {
 		try{
 			
 			RandomAccessFile file = new RandomAccessFile("data/davisbase_tables.tbl", "rw");
-			int numOfPages = Table.pages(file);
-			for(int page = 1; page <= numOfPages; page ++){
+			int numberOfPages = Table.pages(file);
+			for(int page = 1; page <= numberOfPages; page ++){
 				file.seek((page-1)*Table.pageSize);
 				byte fileType = file.readByte();
 				if(fileType == 0x0D)
@@ -52,8 +52,8 @@ public class DropTable {
 			}
 
 			file = new RandomAccessFile("data/davisbase_columns.tbl", "rw");
-			numOfPages = Table.pages(file);
-			for(int page = 1; page <= numOfPages; page ++){
+			numberOfPages = Table.pages(file);
+			for(int page = 1; page <= numberOfPages; page ++){
 				file.seek((page-1)*Table.pageSize);
 				byte fileType = file.readByte();
 				if(fileType == 0x0D)

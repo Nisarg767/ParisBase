@@ -4,8 +4,8 @@ public class Insert {
 			System.out.println("INSERT METHOD");
 			System.out.println("Parsing the string:\"" + insertString + "\"");
 			
-			String[] tokens=insertString.split(" ");
-			String table = tokens[2];
+			String[] token=insertString.split(" ");
+			String table = token[2];
 			String[] temp = insertString.split("values");
 			String temporary=temp[1].trim();
 			String[] insert_vals = temporary.substring(1, temporary.length()-1).split(",");

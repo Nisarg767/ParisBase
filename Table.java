@@ -31,9 +31,9 @@ public class Table{
 		try{
 			RandomAccessFile tblFile = new RandomAccessFile("data/davisbase_columns.tbl", "rw");
 			Buffer bufferObj = new Buffer();
-			String[] colNames = {"rowid", "table_name", "column_name", "data_type", "ordinal_position", "is_nullable"};
+			String[] columnNames = {"rowid", "table_name", "column_name", "data_type", "ordinal_position", "is_nullable"};
 			String[] comp = {"table_name","=",tble};
-			filter(tblFile, comp, colNames, bufferObj);
+			filter(tblFile, comp, columnNames, bufferObj);
 			HashMap<Integer, String[]> content = bufferObj.content;
 			ArrayList<String> arrList = new ArrayList<String>();
 			for(String[] k : content.values()){
@@ -54,9 +54,9 @@ public class Table{
 		try{
 			RandomAccessFile tblFile = new RandomAccessFile("data/davisbase_columns.tbl", "rw");
 			Buffer bufferObj = new Buffer();
-			String[] colNames = {"rowid", "table_name", "column_name", "data_type", "ordinal_position", "is_nullable"};
+			String[] columnNames = {"rowid", "table_name", "column_name", "data_type", "ordinal_position", "is_nullable"};
 			String[] comp = {"table_name","=",tbl};
-			filter(tblFile, comp, colNames, bufferObj);
+			filter(tblFile, comp, columnNames, bufferObj);
 			HashMap<Integer, String[]> content = bufferObj.content;
 			ArrayList<String> arrList = new ArrayList<String>();
 			for(String[] x : content.values()){
@@ -73,7 +73,7 @@ public class Table{
 	}
 
 	
-	public static void filter(RandomAccessFile tblFile, String[] comp, String[] colNames, Buffer bufferObj){
+	public static void filter(RandomAccessFile tblFile, String[] comp, String[] columnNames, Buffer bufferObj){
 		try{
 			int numOfPages = pages(tblFile);
 			for(int eachPage = 1; eachPage <= numOfPages; eachPage++){
@@ -90,7 +90,7 @@ public class Table{
 						String[] valus = retrieveValues(tblFile, loca);
 						int rowId=Integer.parseInt(valus[0]);
 
-						boolean isCheck = cmpCheck(valus, rowId, comp, colNames);
+						boolean isCheck = cmpCheck(valus, rowId, comp, columnNames);
 						
 						if(isCheck)
 							bufferObj.add_vals(rowId, valus);
@@ -100,11 +100,11 @@ public class Table{
 					continue;
 			}
 
-			bufferObj.columnName = colNames;
-			bufferObj.format = new int[colNames.length];
+			bufferObj.columnName = columnNames;
+			bufferObj.format = new int[columnNames.length];
 
 		}catch(Exception ex){
-			System.out.println("Error at filter");
+			System.out.println("Error");
 			ex.printStackTrace();
 		}
 
@@ -281,9 +281,9 @@ public static int searchKeyPage(RandomAccessFile tblFile, int key){
 		try{
 			RandomAccessFile tblFile = new RandomAccessFile("data/davisbase_columns.tbl", "rw");
 			Buffer bufferObj = new Buffer();
-			String[] colNames = {"rowid", "table_name", "column_name", "data_type", "ordinal_position", "is_nullable"};
+			String[] columnNames = {"rowid", "table_name", "column_name", "data_type", "ordinal_position", "is_nullable"};
 			String[] comp = {"table_name","=",tbl};
-			filter(tblFile, comp, colNames, bufferObj);
+			filter(tblFile, comp, columnNames, bufferObj);
 			HashMap<Integer, String[]> content = bufferObj.content;
 			ArrayList<String> arrList = new ArrayList<String>();
 			for(String[] k : content.values()){
@@ -300,7 +300,7 @@ public static int searchKeyPage(RandomAccessFile tblFile, int key){
 	}
 
 
-	public static void filter(RandomAccessFile tblFile, String[] comp, String[] colNames, String[] typ, Buffer bufferObj){
+	public static void filter(RandomAccessFile tblFile, String[] comp, String[] columnNames, String[] typ, Buffer bufferObj){
 		try{
 			
 			int numOfPages = pages(tblFile);
@@ -323,7 +323,7 @@ public static int searchKeyPage(RandomAccessFile tblFile, int key){
 							if(typ[l].equals("DATE") || typ[l].equals("DATETIME"))
 								valsLst[l] = "'"+valsLst[l]+"'";
 						
-						boolean check = cmpCheck(valsLst, roId , comp, colNames);
+						boolean check = cmpCheck(valsLst, roId , comp, columnNames);
 
 						
 						for(int l=0; l < typ.length; l++)
@@ -338,8 +338,8 @@ public static int searchKeyPage(RandomAccessFile tblFile, int key){
 						continue;
 			}
 
-			bufferObj.columnName = colNames;
-			bufferObj.format = new int[colNames.length];
+			bufferObj.columnName = columnNames;
+			bufferObj.format = new int[columnNames.length];
 
 		}catch(Exception ex){
 			System.out.println("Error at filter");
@@ -349,7 +349,7 @@ public static int searchKeyPage(RandomAccessFile tblFile, int key){
 	}
 
 	
-	public static boolean cmpCheck(String[] valusLst, int roId, String[] comp, String[] colNames){
+	public static boolean cmpCheck(String[] valusLst, int roId, String[] comp, String[] columnNames){
 
 		boolean isCheck = false;
 		
@@ -358,8 +358,8 @@ public static int searchKeyPage(RandomAccessFile tblFile, int key){
 		}
 		else{
 			int columPos = 1;
-			for(int k = 0; k < colNames.length; k++){
-				if(colNames[k].equals(comp[0])){
+			for(int k = 0; k < columnNames.length; k++){
+				if(columnNames[k].equals(comp[0])){
 					columPos = k + 1;
 					break;
 				}

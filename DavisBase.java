@@ -64,7 +64,7 @@ public class DavisBase {
 		System.out.println("All commands below are case insensitive");
 		System.out.println();
 		System.out.println("\tSHOW TABLES;                                                 Display all the tables in the database.");
-		System.out.println("\tCREATE TABLE table_name (<column_name datatype>);            Create a new table in the database.");
+		System.out.println("\tCREATE TABLE table_name (column_name datatype);            Create a new table in the database.");
 		System.out.println("\tINSERT INTO table_name VALUES (value1,value2,..);            Insert a new record into the table.");
 		System.out.println("\tDELETE FROM TABLE table_name WHERE row_id = key_value;       Delete a record from the table whose rowid is <key_value>.");
 		System.out.println("\tUPDATE table_name SET column_name = value WHERE row_id = ..; Modifies the records in the table.");
@@ -152,37 +152,37 @@ public class DavisBase {
 		switch (commandTokens.get(0)) {
 
 		    case "show":
-		    	System.out.println("STUB: Calling the method to process the command (SHOW)");
+		    	System.out.println("Case: SHOW");
 			    ShowTables.showTables();
 			    break;
 			
 		    case "create":
-		    	System.out.println("STUB: Calling the method to process the command (CREATE");
+		    	System.out.println("Case: CREATE");
 				CreateTable.parseCreateString(userCommand);
 			    break;
 
 			case "insert":
-				System.out.println("STUB: Calling the method to process the command (INSERT)");
+				System.out.println("Case: INSERT");
 				Insert.parseInsertString(userCommand);
 				break;
 				
 			case "delete":
-				System.out.println("STUB: Calling the method to process the command (DELETE)");
+				System.out.println("Case: DELETE");
 				DeleteTable.parseDeleteString(userCommand);
 				break;	
 
 			case "update":
-				System.out.println("STUB: Calling the method to process the command (UPDATE)");
+				System.out.println("Case: UPDATE");
 				UpdateTable.parseUpdateString(userCommand);
 				break;
 				
 			case "select":
-				System.out.println("STUB: Calling the method to process the command (SELECT)");
+				System.out.println("Case: SELECT");
 				parseQueryString(userCommand);
 				break;
 
 			case "drop":
-				System.out.println("STUB: Calling the method to process the command (DROP)");
+				System.out.println("Case: DROP");
 				DropTable.dropTable(userCommand);
 				break;	
 
@@ -210,7 +210,7 @@ public class DavisBase {
 		}
 	} 
     public static void parseQueryString(String queryString) {
-		System.out.println("STUB: Calling the method to process the command");
+		System.out.println("STUB: parseQueryString Method");
 		System.out.println("Parsing the string:\"" + queryString + "\"");
 		
 		String[] cmp;
