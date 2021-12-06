@@ -25,7 +25,7 @@ public static void parseCreateString(String createString) {
 		{
 		
 		if (token[1].compareTo("table")>0){
-			System.out.println("Wrong syntax");
+			System.out.println("Please check syntax");
 			
 		}
 		else{
